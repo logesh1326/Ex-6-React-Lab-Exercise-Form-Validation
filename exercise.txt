@@ -1,0 +1,326 @@
+Ex. 6 React Lab Exercise: Form Validation 
+Aim 
+To create a React form with validation for required fields, email, password, and display 
+appropriate error messages. 
+Learning Outcome 
+After completing this exercise, students will be able to: 
+• Create a form using React. 
+• Manage form data using useState(). 
+• Validate required fields. 
+• Validate an email address. 
+• Validate password length. 
+• Display error messages dynamically. 
+ 
+Step 1: Create React Project 
+Open the terminal and run: 
+npm create vite@latest form-validation 
+Select: 
+Framework: React 
+Variant: JavaScript 
+Then: 
+cd form-validation 
+npm install 
+npm run dev 
+Open the URL shown in the terminal. 
+ 
+Step 2: Open src/App.jsx 
+Replace the existing code with: 
+import { useState } from "react"; 
+ 
+function App() { 
+  const [formData, setFormData] = useState({ 
+    name: "", 
+    email: "", 
+    password: "" 
+  }); 
+ 
+  const [errors, setErrors] = useState({}); 
+ 
+
+  const handleChange = (e) => { 
+    setFormData({ 
+      ...formData, 
+      [e.target.name]: e.target.value 
+    }); 
+  }; 
+ 
+  const validate = () => { 
+    let newErrors = {}; 
+ 
+    // Required field validation 
+    if (formData.name.trim() === "") { 
+      newErrors.name = "Name is required"; 
+    } 
+ 
+    // Email validation 
+    if (formData.email.trim() === "") { 
+      newErrors.email = "Email is required"; 
+    } else if (!formData.email.includes("@")) { 
+      newErrors.email = "Enter a valid email"; 
+    } 
+ 
+    // Password validation 
+    if (formData.password === "") { 
+      newErrors.password = "Password is required"; 
+    } else if (formData.password.length < 6) { 
+      newErrors.password = 
+        "Password must contain at least 6 characters"; 
+    } 
+ 
+    return newErrors; 
+  }; 
+ 
+  const handleSubmit = (e) => { 
+    e.preventDefault(); 
+ 
+    const validationErrors = validate(); 
+ 
+    setErrors(validationErrors); 
+ 
+    if (Object.keys(validationErrors).length === 0) { 
+      alert("Form submitted successfully!"); 
+    } 
+  }; 
+ 
+  return ( 
+    <div> 
+      <h1>Registration Form</h1> 
+ 
+      <form onSubmit={handleSubmit}> 
+ 
+        <label>Name:</label> 
+        <input 
+          type="text" 
+          name="name" 
+          value={formData.name} 
+          onChange={handleChange} 
+        /> 
+ 
+
+        {errors.name && <p>{errors.name}</p>} 
+ 
+        <label>Email:</label> 
+        <input 
+          type="text" 
+          name="email" 
+          value={formData.email} 
+          onChange={handleChange} 
+        /> 
+ 
+        {errors.email && <p>{errors.email}</p>} 
+ 
+        <label>Password:</label> 
+        <input 
+          type="password" 
+          name="password" 
+          value={formData.password} 
+          onChange={handleChange} 
+        /> 
+ 
+        {errors.password && <p>{errors.password}</p>} 
+ 
+        <button type="submit">Register</button> 
+ 
+      </form> 
+    </div> 
+  ); 
+} 
+ 
+export default App; 
+ 
+Step 3: Understand the Code 
+1. Form data 
+const [formData, setFormData] = useState({ 
+  name: "", 
+  email: "", 
+  password: "" 
+}); 
+This stores the values entered by the student. 
+name     → Student name 
+email    → Student email 
+password → Student password 
+ 
+2. Error state 
+const [errors, setErrors] = useState({}); 
+This stores validation errors. 
+Example: 
+{ 
+
+  name: "Name is required", 
+  email: "Enter a valid email" 
+} 
+ 
+3. Handle input changes 
+const handleChange = (e) => { 
+  setFormData({ 
+    ...formData, 
+    [e.target.name]: e.target.value 
+  }); 
+}; 
+When the student types: 
+Name → Ajith 
+React updates: 
+formData.name = "Ajith" 
+ 
+Step 4: Required Field Validation 
+We check whether the name is empty: 
+if (formData.name.trim() === "") { 
+  newErrors.name = "Name is required"; 
+} 
+Example 
+If the student clicks Register without entering a name: 
+Name is required 
+is displayed. 
+ 
+Step 5: Email Validation 
+First check whether email is empty: 
+if (formData.email.trim() === "") { 
+  newErrors.email = "Email is required"; 
+} 
+Then check whether it contains @: 
+else if (!formData.email.includes("@")) { 
+  newErrors.email = "Enter a valid email"; 
+} 
+Example 
+Invalid: 
+
+studentgmail.com 
+Error: 
+Enter a valid email 
+Valid: 
+student@gmail.com 
+ 
+Step 6: Password Validation 
+Check whether the password is empty: 
+if (formData.password === "") { 
+  newErrors.password = "Password is required"; 
+} 
+Then check minimum length: 
+else if (formData.password.length < 6) { 
+  newErrors.password = 
+    "Password must contain at least 6 characters"; 
+} 
+Example 
+Input: 
+abc 
+Output: 
+Password must contain at least 6 characters 
+Input: 
+abc123 
+Valid. 
+ 
+Step 7: Display Error Messages 
+This code: 
+{errors.name && <p>{errors.name}</p>} 
+means: 
+If there is an error for the name, display the error message. 
+Similarly: 
+{errors.email && <p>{errors.email}</p>} 
+and: 
+
+{errors.password && <p>{errors.password}</p>} 
+ 
+Step 8: Prevent Form Submission 
+const handleSubmit = (e) => { 
+  e.preventDefault(); 
+preventDefault() stops the browser from refreshing the page. 
+Then: 
+const validationErrors = validate(); 
+calls the validation function. 
+Finally: 
+setErrors(validationErrors); 
+displays the errors. 
+ 
+Step 9: Test the Form 
+Test 1: Empty Form 
+Click Register without entering anything. 
+Expected: 
+Name is required 
+Email is required 
+Password is required 
+Test 2: Invalid Email 
+Enter: 
+Name: Ajith 
+Email: ajithgmail.com 
+Password: abc123 
+Expected: 
+Enter a valid email 
+Test 3: Short Password 
+Enter: 
+Name: Ajith 
+Email: ajith@gmail.com 
+Password: 123 
+Expected: 
+Password must contain at least 6 characters 
+
+Test 4: Valid Form 
+Enter: 
+Name: Ajith 
+Email: ajith@gmail.com 
+Password: abc123 
+Expected: 
+Form submitted successfully! 
+ 
+Step 10: Optional CSS 
+Create or modify src/App.css: 
+form { 
+  width: 350px; 
+  margin: 30px auto; 
+} 
+ 
+label { 
+  display: block; 
+  margin-top: 15px; 
+} 
+ 
+input { 
+  width: 100%; 
+  padding: 8px; 
+  margin-top: 5px; 
+} 
+ 
+p { 
+  color: red; 
+} 
+ 
+button { 
+  margin-top: 20px; 
+  padding: 10px 20px; 
+} 
+ 
+Simple Flow 
+              User enters data 
+                     ↓ 
+              Form is submitted 
+                     ↓ 
+               validate() 
+                     ↓ 
+          ┌──────────┴──────────┐ 
+          ↓                     ↓ 
+       Invalid                 Valid 
+          ↓                     ↓ 
+   Show error message     Submit form 
+
+Important React Concepts 
+Concept 
+Purpose 
+useState() 
+Store form data 
+onChange 
+Detect user input 
+onSubmit 
+Handle form submission 
+preventDefault() 
+Stop page refresh 
+validate() 
+Check form data 
+Conditional rendering 
+Display errors 
+setErrors() 
+Update error messages 
+Student Task 
+Modify the program to add two more fields: 
+1. Phone Number — must contain exactly 10 digits. 
+2. Age — must be at least 18. 
+Challenge: Add a Confirm Password field and display an error if it does not match the Password. 
+ 
